@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; }
+      .label { font-family: Arial, sans-serif; font-size: 12px; }
+      .pin-label { font-family: Arial, sans-serif; font-size: 10px; }
+      .wire { stroke-width: 2; fill: none; }
+      .power-wire { stroke-width: 3; fill: none; }
+      .component { fill: #f0f0f0; stroke: #333; stroke-width: 2; }
+      .pin { fill: #ffd700; stroke: #333; stroke-width: 1; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" class="title">Nゲージコントローラー配線図</text>
+  
+  <!-- Arduino UNO -->
+  <rect x="50" y="80" width="120" height="180" class="component" rx="5"/>
+  <text x="110" y="100" text-anchor="middle" class="label">Arduino UNO</text>
+  
+  <!-- Arduino Pins -->
+  <circle cx="170" cy="120" r="4" class="pin"/>
+  <text x="180" y="125" class="pin-label">D8</text>
+  
+  <circle cx="170" cy="140" r="4" class="pin"/>
+  <text x="180" y="145" class="pin-label">D9</text>
+  
+  <circle cx="170" cy="160" r="4" class="pin"/>
+  <text x="180" y="165" class="pin-label">D10</text>
+  
+  <circle cx="170" cy="200" r="4" class="pin"/>
+  <text x="180" y="205" class="pin-label">5V</text>
+  
+  <circle cx="170" cy="220" r="4" class="pin"/>
+  <text x="180" y="225" class="pin-label">GND</text>
+  
+  <!-- L298N Motor Driver -->
+  <rect x="350" y="80" width="160" height="180" class="component" rx="5"/>
+  <text x="430" y="100" text-anchor="middle" class="label">L298N Motor Driver</text>
+  
+  <!-- L298N Pins -->
+  <circle cx="350" cy="120" r="4" class="pin"/>
+  <text x="330" y="125" class="pin-label">IN1</text>
+  
+  <circle cx="350" cy="140" r="4" class="pin"/>
+  <text x="330" y="145" class="pin-label">IN2</text>
+  
+  <circle cx="350" cy="160" r="4" class="pin"/>
+  <text x="330" y="165" class="pin-label">ENA</text>
+  
+  <circle cx="350" cy="200" r="4" class="pin"/>
+  <text x="325" y="205" class="pin-label">5V</text>
+  
+  <circle cx="350" cy="220" r="4" class="pin"/>
+  <text x="320" y="225" class="pin-label">GND</text>
+  
+  <circle cx="350" cy="180" r="4" class="pin"/>
+  <text x="320" y="185" class="pin-label">12V</text>
+  
+  <!-- Output pins -->
+  <circle cx="510" cy="140" r="4" class="pin"/>
+  <text x="520" y="145" class="pin-label">OUT1</text>
+  
+  <circle cx="510" cy="160" r="4" class="pin"/>
+  <text x="520" y="165" class="pin-label">OUT2</text>
+  
+  <!-- Motor -->
+  <rect x="600" y="120" width="80" height="60" class="component" rx="5"/>
+  <text x="640" y="140" text-anchor="middle" class="label">Nゲージ</text>
+  <text x="640" y="155" text-anchor="middle" class="label">モーター</text>
+  
+  <circle cx="600" cy="140" r="4" class="pin"/>
+  <text x="580" y="145" class="pin-label">+</text>
+  
+  <circle cx="600" cy="160" r="4" class="pin"/>
+  <text x="580" y="165" class="pin-label">-</text>
+  
+  <!-- External Power Supply -->
+  <rect x="250" y="320" width="100" height="80" class="component" rx="5"/>
+  <text x="300" y="340" text-anchor="middle" class="label">外部電源</text>
+  <text x="300" y="355" text-anchor="middle" class="label">12V 2A</text>
+  
+  <circle cx="300" cy="380" r="4" class="pin"/>
+  <text x="310" y="385" class="pin-label">+12V</text>
+  
+  <circle cx="280" cy="380" r="4" class="pin"/>
+  <text x="255" y="385" class="pin-label">GND</text>
+  
+  <!-- Wires -->
+  <!-- Arduino D8 to L298N IN1 -->
+  <line x1="174" y1="120" x2="346" y2="120" class="wire" stroke="orange"/>
+  
+  <!-- Arduino D9 to L298N IN2 -->
+  <line x1="174" y1="140" x2="346" y2="140" class="wire" stroke="gold"/>
+  
+  <!-- Arduino D10 to L298N ENA -->
+  <line x1="174" y1="160" x2="346" y2="160" class="wire" stroke="green"/>
+  
+  <!-- Arduino 5V to L298N 5V -->
+  <line x1="174" y1="200" x2="346" y2="200" class="wire" stroke="red"/>
+  
+  <!-- Arduino GND to L298N GND -->
+  <line x1="174" y1="220" x2="346" y2="220" class="wire" stroke="black"/>
+  
+  <!-- External Power 12V to L298N 12V -->
+  <line x1="300" y1="376" x2="300" y2="300" class="power-wire" stroke="red"/>
+  <line x1="300" y1="300" x2="330" y2="300" class="power-wire" stroke="red"/>
+  <line x1="330" y1="300" x2="330" y2="180" class="power-wire" stroke="red"/>
+  <line x1="330" y1="180" x2="346" y2="180" class="power-wire" stroke="red"/>
+  
+  <!-- External Power GND to L298N GND -->
+  <line x1="280" y1="376" x2="280" y2="310" class="power-wire" stroke="black"/>
+  <line x1="280" y1="310" x2="320" y2="310" class="power-wire" stroke="black"/>
+  <line x1="320" y1="310" x2="320" y2="230" class="power-wire" stroke="black"/>
+  <line x1="320" y1="230" x2="346" y2="230" class="power-wire" stroke="black"/>
+  
+  <!-- L298N OUT1 to Motor + -->
+  <line x1="514" y1="140" x2="596" y2="140" class="wire" stroke="blue"/>
+  
+  <!-- L298N OUT2 to Motor - -->
+  <line x1="514" y1="160" x2="596" y2="160" class="wire" stroke="purple"/>
+  
+  <!-- Wire Labels -->
+  <text x="260" y="115" class="pin-label" fill="orange">D8→IN1</text>
+  <text x="260" y="135" class="pin-label" fill="gold">D9→IN2</text>
+  <text x="260" y="155" class="pin-label" fill="green">D10→ENA</text>
+  <text x="260" y="195" class="pin-label" fill="red">5V</text>
+  <text x="260" y="215" class="pin-label" fill="black">GND</text>
+  
+  <text x="520" y="135" class="pin-label" fill="blue">OUT1→M+</text>
+  <text x="520" y="155" class="pin-label" fill="purple">OUT2→M-</text>
+  
+  <text x="260" y="290" class="pin-label" fill="red">+12V</text>
+  <text x="230" y="300" class="pin-label" fill="black">GND</text>
+  
+  <!-- Legend -->
+  <text x="50" y="450" class="label">配線色分け:</text>
+  <line x1="50" y1="470" x2="80" y2="470" class="wire" stroke="orange"/>
+  <text x="85" y="475" class="pin-label">制御信号 (D8,D9,D10)</text>
+  <line x1="50" y1="490" x2="80" y2="490" class="wire" stroke="red"/>
+  <text x="85" y="495" class="pin-label">電源 (+5V, +12V)</text>
+  <line x1="50" y1="510" x2="80" y2="510" class="wire" stroke="black"/>
+  <text x="85" y="515" class="pin-label">グランド (GND)</text>
+  <line x1="50" y1="530" x2="80" y2="530" class="wire" stroke="blue"/>
+  <text x="85" y="535" class="pin-label">モーター出力</text>
+</svg>

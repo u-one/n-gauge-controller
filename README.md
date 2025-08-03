@@ -30,6 +30,12 @@ PWMによる速度制御と、正転・反転の切り替えを実現してお�
 
 ※ L298Nの 5V-ENジャンパーは通常そのままでOK。
 
+### 詳細な配線図
+
+- [配線図（ASCII版）](docs/wiring_diagram.md)
+- [配線図（SVG版）](docs/wiring_diagram.svg)
+- [Fritzing形式配線図](docs/fritzing_wiring.txt)
+
 ---
 
 ## 🧱 ディレクトリ構成（クリーンアーキテクチャ）

@@ -1,0 +1,78 @@
+# Nゲージコントローラー - Fritzing形式配線図
+
+## 部品リスト
+- Arduino UNO R3
+- L298N Motor Driver Module
+- DC Motor (Nゲージ用)
+- External Power Supply (12V 2A)
+- Jumper Wires
+
+## 配線接続表
+
+### Arduino UNO → L298N Motor Driver
+| Arduino Pin | L298N Pin | Wire Color | Function |
+|-------------|-----------|------------|----------|
+| Digital 8   | IN1       | Orange     | Motor Direction Control 1 |
+| Digital 9   | IN2       | Yellow     | Motor Direction Control 2 |
+| Digital 10  | ENA       | Green      | PWM Speed Control |
+| 5V          | 5V        | Red        | Logic Power Supply |
+| GND         | GND       | Black      | Common Ground |
+
+### External Power Supply → L298N Motor Driver
+| Power Supply | L298N Pin | Wire Color | Function |
+|--------------|-----------|------------|----------|
+| +12V         | 12V       | Red (Thick)| Motor Power Supply |
+| GND          | GND       | Black (Thick)| Power Ground |
+
+### L298N Motor Driver → Nゲージ Motor
+| L298N Pin | Motor Terminal | Wire Color | Function |
+|-----------|----------------|------------|----------|
+| OUT1      | Motor +        | Blue       | Motor Positive |
+| OUT2      | Motor -        | White      | Motor Negative |
+
+## 配線手順
+
+1. **安全確認**: すべての電源を切断した状態で配線を開始
+2. **Arduino → L298N 信号線**:
+   - D8 → IN1 (オレンジ線)
+   - D9 → IN2 (黄色線)
+   - D10 → ENA (緑線)
+3. **Arduino → L298N 電源線**:
+   - 5V → 5V (赤線)
+   - GND → GND (黒線)
+4. **外部電源 → L298N**:
+   - +12V → 12V (太い赤線)
+   - GND → GND (太い黒線)
+5. **L298N → モーター**:
+   - OUT1 → モーター+ (青線)
+   - OUT2 → モーター- (白線)
+
+## 注意事項
+
+- **極性確認**: 電源の極性を必ず確認してから接続
+- **太さ**: 電源線は信号線より太いワイヤーを使用
+- **絶縁**: 配線が他の部品に触れないよう注意
+- **固定**: ブレッドボードまたはユニバーサル基板で固定
+- **テスト**: 配線完了後、マルチメーターで導通確認
+
+## Fritzing設定メモ
+
+```
+Parts Used:
+- Arduino Uno (Rev3)
+- L298N Dual H-Bridge Motor Driver
+- DC Motor
+- Battery/Power Supply (12V)
+- Hookup Wire
+
+Connections:
+Wire1: Arduino_Digital_8 → L298N_IN1
+Wire2: Arduino_Digital_9 → L298N_IN2  
+Wire3: Arduino_Digital_10 → L298N_ENA
+Wire4: Arduino_5V → L298N_5V
+Wire5: Arduino_GND → L298N_GND
+Wire6: PowerSupply_12V → L298N_12V
+Wire7: PowerSupply_GND → L298N_GND
+Wire8: L298N_OUT1 → Motor_Positive
+Wire9: L298N_OUT2 → Motor_Negative
+```
