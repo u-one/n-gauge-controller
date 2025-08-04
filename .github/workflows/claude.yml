@@ -1,0 +1,65 @@
+name: Claude コード
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  claude:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      id-token: write
+      actions: read # ClaudeがPRのCI結果を読むために必要
+    steps:
+      - name: リポジトリのチェックアウト
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Claude コード実行
+        id: claude
+        uses: anthropics/claude-code-action@beta
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+
+          # ClaudeがPRのCI結果を読み取るためのオプション設定
+          additional_permissions: |
+            actions: read
+          
+          # オプション: モデル指定（デフォルト: Claude Sonnet 4、Claude Opus 4を使用する場合はコメントアウト）
+          # model: "claude-opus-4-20250514"
+          
+          # オプション: トリガーフレーズのカスタマイズ（デフォルト: @claude）
+          # trigger_phrase: "/claude"
+          
+          # オプション: 特定ユーザーがイシューにアサインされた時のトリガー
+          # assignee_trigger: "claude-bot"
+          
+          # オプション: Claudeが特定コマンドを実行できるように許可
+          # allowed_tools: "Bash(arduino-cli compile),Bash(arduino-cli upload),Bash(cppcheck),Bash(clang-format)"
+          
+          # オプション: プロジェクト用のClaudeの動作をカスタマイズするための独自指示
+          # custom_instructions: |
+          #   コーディング標準に従う
+          #   Arduinoプロジェクトのベストプラクティスを遵守する
+          #   新しいコードには適切なコメントを追加する
+          #   配線図とコードの整合性を確認する
+          
+          # オプション: Claude用のカスタム環境変数
+          # claude_env: |
+          #   ARDUINO_ENV: development
+

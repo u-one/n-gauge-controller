@@ -1,0 +1,80 @@
+name: Claude コードレビュー
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    # オプション: 特定のファイル変更時のみ実行
+    # paths:
+    #   - "cpp/**/*.ino"
+    #   - "cpp/**/*.cpp"
+    #   - "cpp/**/*.h"
+    #   - "docs/**/*.md"
+
+jobs:
+  claude-review:
+    # オプション: PR作成者によるフィルタリング
+    # if: |
+    #   github.event.pull_request.user.login == 'external-contributor' ||
+    #   github.event.pull_request.user.login == 'new-developer' ||
+    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
+    
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      id-token: write
+    
+    steps:
+      - name: リポジトリのチェックアウト
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Claude コードレビュー実行
+        id: claude-review
+        uses: anthropics/claude-code-action@beta
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+
+          # オプション: モデル指定（デフォルト: Claude Sonnet 4、Claude Opus 4を使用する場合はコメントアウト）
+          # model: "claude-opus-4-20250514"
+          
+          # 自動レビュー用の直接プロンプト（@claude記載不要）
+          direct_prompt: |
+            このプルリクエストをレビューし、以下の点についてフィードバックをお願いします：
+            - コード品質とベストプラクティス
+            - 潜在的なバグや問題
+            - パフォーマンスの考慮事項
+            - セキュリティの懸念
+            - テストカバレッジ
+            - Arduinoプロジェクト特有の配線やピン設定の適切性
+            
+            建設的で有用なフィードバックをお願いします。
+
+          # オプション: スティッキーコメントを使用して、同じPRの後続プッシュで同じコメントを再利用
+          # use_sticky_comment: true
+          
+          # オプション: ファイルタイプに基づくカスタムレビュー
+          # direct_prompt: |
+          #   このPRを以下の観点でレビューしてください：
+          #   - Arduinoファイル(.ino): ピン設定、ライブラリ使用法、メモリ効率
+          #   - C++ファイル(.cpp/.h): クラス設計、メモリ管理、組み込みベストプラクティス
+          #   - ドキュメント(.md): 配線図の正確性、説明の明確さ
+          #   - 回路図: 電気的安全性、部品選定の適切性
+          
+          # オプション: 作成者に応じた異なるプロンプト
+          # direct_prompt: |
+          #   ${{ github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR' && 
+          #   'ようこそ！初回コントリビューターからのPRをレビューします。励ましの言葉とともに、提案に対して詳細な説明を提供してください。' ||
+          #   'コーディング標準とベストプラクティスに焦点を当てた徹底的なコードレビューをお願いします。' }}
+          
+          # オプション: テストやリント実行用の特定ツールを追加
+          # allowed_tools: "Bash(arduino-cli compile),Bash(cppcheck),Bash(clang-format)"
+          
+          # オプション: 特定の条件でレビューをスキップ
+          # if: |
+          #   !contains(github.event.pull_request.title, '[skip-review]') &&
+          #   !contains(github.event.pull_request.title, '[WIP]') &&
+          #   !contains(github.event.pull_request.title, '[作業中]')
+
