@@ -1,4 +1,4 @@
-name: Claude Code
+name: Claude コード
 
 on:
   issue_comment:
@@ -23,42 +23,43 @@ jobs:
       pull-requests: read
       issues: read
       id-token: write
-      actions: read # Required for Claude to read CI results on PRs
+      actions: read # ClaudeがPRのCI結果を読むために必要
     steps:
-      - name: Checkout repository
+      - name: リポジトリのチェックアウト
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - name: Run Claude Code
+      - name: Claude コード実行
         id: claude
         uses: anthropics/claude-code-action@beta
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
-          # This is an optional setting that allows Claude to read CI results on PRs
+          # ClaudeがPRのCI結果を読み取るためのオプション設定
           additional_permissions: |
             actions: read
           
-          # Optional: Specify model (defaults to Claude Sonnet 4, uncomment for Claude Opus 4)
+          # オプション: モデル指定（デフォルト: Claude Sonnet 4、Claude Opus 4を使用する場合はコメントアウト）
           # model: "claude-opus-4-20250514"
           
-          # Optional: Customize the trigger phrase (default: @claude)
+          # オプション: トリガーフレーズのカスタマイズ（デフォルト: @claude）
           # trigger_phrase: "/claude"
           
-          # Optional: Trigger when specific user is assigned to an issue
+          # オプション: 特定ユーザーがイシューにアサインされた時のトリガー
           # assignee_trigger: "claude-bot"
           
-          # Optional: Allow Claude to run specific commands
-          # allowed_tools: "Bash(npm install),Bash(npm run build),Bash(npm run test:*),Bash(npm run lint:*)"
+          # オプション: Claudeが特定コマンドを実行できるように許可
+          # allowed_tools: "Bash(arduino-cli compile),Bash(arduino-cli upload),Bash(cppcheck),Bash(clang-format)"
           
-          # Optional: Add custom instructions for Claude to customize its behavior for your project
+          # オプション: プロジェクト用のClaudeの動作をカスタマイズするための独自指示
           # custom_instructions: |
-          #   Follow our coding standards
-          #   Ensure all new code has tests
-          #   Use TypeScript for new files
+          #   コーディング標準に従う
+          #   Arduinoプロジェクトのベストプラクティスを遵守する
+          #   新しいコードには適切なコメントを追加する
+          #   配線図とコードの整合性を確認する
           
-          # Optional: Custom environment variables for Claude
+          # オプション: Claude用のカスタム環境変数
           # claude_env: |
-          #   NODE_ENV: test
+          #   ARDUINO_ENV: development
 
