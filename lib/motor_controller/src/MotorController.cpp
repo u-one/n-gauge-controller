@@ -3,6 +3,9 @@
 
 MotorController::MotorController(int in1Pin, int in2Pin, int pwmPin)
     : _pwmPin(pwmPin), _in1Pin(in1Pin), _in2Pin(in2Pin) {
+}
+
+void MotorController::setup() {
     pinMode(_in1Pin, OUTPUT);
     pinMode(_in2Pin, OUTPUT);
     pinMode(_pwmPin, OUTPUT);
