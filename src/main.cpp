@@ -1,28 +1,34 @@
 #include <Arduino.h>
 #include "MotorController.h"
+#include "LiquidCrystal3.h"
 
 const int IN1 = 8;
 const int IN2 = 9;
 const int ENA = 10;  // PWM用
 MotorController motorController(IN1, IN2, ENA);
 
+// LiquidCrystal lcd(clock, data, latch);
+// d0-d13,a0-a5 select free!
+LiquidCrystal lcd(2, 4, 3);
+
+
+int speed = 0;
+
 // put function declarations here:
 void go(int);
 void pattern1();
+void show_lcd();
+
 
 void setup() {
+  lcd.begin(16, 2);
+  lcd.print("OK");
+
   motorController.setup();
-  //pinMode(IN1, OUTPUT);
-  //pinMode(IN2, OUTPUT);
-  //pinMode(ENA, OUTPUT);
 }
 
 void loop() {
-  //digitalWrite(IN1, HIGH);
-  //digitalWrite(IN2, LOW);
-  //analogWrite(ENA, 128);
-  //delay(1000);
-   pattern1();
+  pattern1();
 }
 
 void pattern1() {
@@ -37,15 +43,26 @@ void pattern1() {
 }
 
 void go(int max) {
-  int i;
-  for(i=0;i<max;i++) {
-    motorController.speed(i);
+  for(speed=0;speed<max;speed++) {
+    motorController.speed(speed);
+    show_lcd();
     delay(20);
   }
   
-  for(i=max;i>=0;i--) {
-    motorController.speed(i);
+  for(speed=max;speed>=0;speed--) {
+    motorController.speed(speed);
+    show_lcd();
     delay(20);
   }
+}
 
+void show_lcd() {
+  lcd.setCursor(0, 1);
+  lcd.print("SPEED:");
+  if (speed < 10) {
+    lcd.print("__");
+  } else if (speed < 100) {
+    lcd.print("_");
+  }
+  lcd.print(speed);
 }
