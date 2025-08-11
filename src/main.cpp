@@ -26,36 +26,126 @@ void setup() {
   lcd.print("OK");
 
   motorController.setup();
+
 }
+
+enum class RotarySwitchStatus {
+  Unknown,
+  State1,
+  State2,
+  State3,
+  State4,
+  State5,
+  State6,
+  State7,
+  State8,
+  State9,
+  State10,
+  State11,
+  State12
+};
+
+RotarySwitchStatus getRotarySwitchStatus(int value);
 
 void loop() {
-  pattern1();
-}
+  //pwmDemo();
+  //pattern1();
+  int value = analogRead(A0);  // 0〜1023の範囲で値が返る
 
-void pattern1() {
-  motorController.forward();
-  go(120);
-  delay(2000);
-  motorController.reverse();
-  go(120);
-  delay(2000);
-  motorController.stop();
-
-}
-
-void go(int max) {
-  for(speed=0;speed<max;speed++) {
-    motorController.speed(speed);
-    show_lcd();
-    delay(20);
+  RotarySwitchStatus status = getRotarySwitchStatus(value); 
+  bool forward = true;
+  switch(status) {
+    case RotarySwitchStatus::State2:
+      forward = false;
+      speed = 80;
+      break;
+    case RotarySwitchStatus::State3:
+      forward = false;
+      speed = 60;
+      break;
+    case RotarySwitchStatus::State4:
+      forward = false;
+      speed = 40;
+      break;
+    case RotarySwitchStatus::State5:
+      forward = false;
+      speed = 20;
+      break;
+    case RotarySwitchStatus::State6:
+      speed = 0;
+      break;
+    case RotarySwitchStatus::State7:
+      speed = 20;
+      break;
+    case RotarySwitchStatus::State8:
+      speed = 40;
+      break;
+    case RotarySwitchStatus::State9:
+      speed = 60;
+      break;
+    case RotarySwitchStatus::State10:
+      speed = 80;
+      break;
+    default:
+      speed = 0; // Unknown状態は停止
   }
-  
-  for(speed=max;speed>=0;speed--) {
-    motorController.speed(speed);
-    show_lcd();
-    delay(20);
+
+  if (forward) {
+    motorController.forward();
+  } else {
+    motorController.reverse();
   }
+
+  // 正確な周波数テスト
+  motorController.setPwmSettings(800, speed);
+  lcd.clear();
+  lcd.print(motorController.getCurrentFrequency());
+  lcd.print("Hz ");
+  if (forward) {
+    lcd.print("Forward");
+  } else {
+    lcd.print("Reverse"); 
+  }
+
+  lcd.setCursor(0, 1);
+  lcd.print(speed);
+
+  delay(500);
+
 }
+
+RotarySwitchStatus getRotarySwitchStatus(int value) {
+  RotarySwitchStatus status = RotarySwitchStatus::Unknown;
+  if (0 <= value && value <= 10) {
+    status = RotarySwitchStatus::State1;
+  } else if (91 - 5 <= value && value <= 91+5) {
+    status = RotarySwitchStatus::State2;
+  } else if (185 - 5 <= value && value <= 185+5) {
+    status = RotarySwitchStatus::State3;
+  } else if (278 - 5 <= value && value <= 278+5) {
+    status = RotarySwitchStatus::State4;
+  } else if (372 - 5 <= value && value <= 372+5) {
+    status = RotarySwitchStatus::State5;
+  } else if (465 - 5 <= value && value <= 465+5) {
+    status = RotarySwitchStatus::State6;
+  } else if (558 - 5 <= value && value <= 558+5) {
+    status = RotarySwitchStatus::State7;
+  } else if (651 - 5 <= value && value <= 651+5) {
+    status = RotarySwitchStatus::State8;
+  } else if (743 - 5 <= value && value <= 743+5) {
+    status = RotarySwitchStatus::State9;
+  } else if (837 - 5 <= value && value <= 837+5) {
+    status = RotarySwitchStatus::State10;
+  } else if (931 - 5 <= value && value <= 931+5) {
+    status = RotarySwitchStatus::State11;
+  } else if (1023 - 5 <= value && value <= 1023) {
+    status = RotarySwitchStatus::State12;
+  } else {
+    status = RotarySwitchStatus::Unknown;
+  }
+  return status;
+}
+
 
 void show_lcd() {
   lcd.setCursor(0, 1);
