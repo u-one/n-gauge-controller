@@ -6,6 +6,7 @@
 #include "TwoLinesCharacterDisplay.h"
 #include "DemoTrainController.h"
 #include "AutoTrainController.h"
+#include "MasconTrainController.h"
 
 const int IN1 = 8;
 const int IN2 = 9;
@@ -20,7 +21,8 @@ TwoLinesCharacterDisplay display(&lcd);
 // ロータリースイッチとトレインコントローラー
 RotarySwitch rotarySwitch(A0);
 //SimpleTrainController trainController(&motorController, &rotarySwitch, &display);
-AutoTrainController trainController(&motorController, &display);
+//AutoTrainController trainController(&motorController, &display);
+MasconTrainController trainController(&motorController, &rotarySwitch, &display);
 
 void setup() {
   display.setup();
