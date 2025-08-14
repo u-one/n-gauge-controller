@@ -56,8 +56,13 @@ void TwoLinesCharacterDisplay::clearLine(int lineNumber) {
 
 void TwoLinesCharacterDisplay::_updateLine(int lineNumber, const String& text) {
     if (lineNumber < 0 || lineNumber >= _rows) return;
+
+    String paddedText = text;
+    for (int i = 0; i < _cols - text.length(); i++) {
+        paddedText += " ";
+    }
     
     _lcd->setCursor(0, lineNumber);
-    _lcd->print(text);
+    _lcd->print(paddedText);
 }
 

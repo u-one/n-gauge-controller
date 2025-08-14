@@ -76,16 +76,19 @@ void MasconTrainController::update() {
     applyMotorControl();
     
     // 表示の更新（位置が変わった場合、または速度が変化中）
-    if (positionChanged || _isAccelerating || _isDecelerating) {
+    if (positionChanged) {
         String line1 = control.displayName;
+        _display->setLine1(line1);
+    }
+
+    if (_isAccelerating || _isDecelerating) {
         String line2 = "Speed: " + String(_currentSpeed) + "%";
         if (_isAccelerating) {
             line2 += " ACC";
         } else if (_isDecelerating) {
             line2 += " BRK";
         }
-        
-        _display->setLines(line1, line2);
+        _display->setLine2(line2);
     }
     
     // 状態更新
