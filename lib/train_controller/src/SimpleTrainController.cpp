@@ -50,17 +50,21 @@ void SimpleTrainController::update() {
     // 状態が変更された場合、モーターを制御
     if (_currentState.hasChanged) {
         // 方向設定
-        if (_currentState.isForward) {
+        if (_currentState.isForward)
+        {
             _motorController->forward();
-        } else {
+        }
+        else
+        {
             _motorController->reverse();
         }
-        
+
         // 速度設定（800Hz固定、duty比で速度制御）
         _motorController->setPwmSettings(800, _currentState.speed);
-        
+
         // 停止の場合
-        if (_currentState.speed == 0) {
+        if (_currentState.speed == 0)
+        {
             _motorController->stop();
         }
 
@@ -68,8 +72,8 @@ void SimpleTrainController::update() {
         String line2 = String(_motorController->getCurrentFrequency()) + "Hz " + (_currentState.isForward ? "FWD" : "REV");
 
         _display->setLines(line1, line2);
-  }
-
+    }
+    delay(500);
 }
 
 TrainControlState SimpleTrainController::getCurrentState() {
