@@ -16,30 +16,19 @@ struct TrainControlState {
 
 class TrainController {
 public:
-    TrainController(MotorController* motorController, RotarySwitch* rotarySwitch, TwoLinesCharacterDisplay* display);
-    void begin();
-    void update();
-    TrainControlState getCurrentState();
-    bool hasStateChanged();
+    TrainController(MotorController* motorController, TwoLinesCharacterDisplay* display);
+    virtual ~TrainController() = default;
+    
+    virtual void begin() = 0;
+    virtual void update() = 0;
+    virtual TrainControlState getCurrentState() = 0;
+    virtual bool hasStateChanged() = 0;
 
-private:
+protected:
     MotorController* _motorController;
-    RotarySwitch* _rotarySwitch;
     TwoLinesCharacterDisplay* _display;
     TrainControlState _currentState;
     TrainControlState _lastState;
-    
-    struct ControlMapping {
-        RotarySwitchPosition position;
-        int speed;
-        bool isForward;
-        String displayName;
-    };
-    
-    static const ControlMapping _mappings[];
-    static const int _mappingCount;
-    
-    TrainControlState mapPositionToControl(RotarySwitchPosition position);
 };
 
 #endif

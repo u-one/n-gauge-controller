@@ -2,7 +2,7 @@
 #include "MotorController.h"
 #include "LiquidCrystal3.h"
 #include "RotarySwitch.h"
-#include "TrainController.h"
+#include "SimpleTrainController.h"
 #include "TwoLinesCharacterDisplay.h"
 
 const int IN1 = 8;
@@ -17,7 +17,7 @@ TwoLinesCharacterDisplay display(&lcd);
 
 // ロータリースイッチとトレインコントローラー
 RotarySwitch rotarySwitch(A0);
-TrainController trainController(&motorController, &rotarySwitch, &display);
+SimpleTrainController trainController(&motorController, &rotarySwitch, &display);
 
 int speed = 0;
 
