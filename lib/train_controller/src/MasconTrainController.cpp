@@ -170,11 +170,3 @@ MasconTrainController::MasconMapping MasconTrainController::mapPositionToControl
     // 見つからない場合は安全のため緊急停止
     return {RotarySwitchPosition::Unknown, 0, "Emergency", true};
 }
-
-TrainControlState MasconTrainController::getCurrentState() {
-    return _currentState;
-}
-
-bool MasconTrainController::hasStateChanged() {
-    return _currentState.hasChanged;
-}

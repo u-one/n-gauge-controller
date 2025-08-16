@@ -76,14 +76,6 @@ void SimpleTrainController::update() {
     delay(500);
 }
 
-TrainControlState SimpleTrainController::getCurrentState() {
-    return _currentState;
-}
-
-bool SimpleTrainController::hasStateChanged() {
-    return _currentState.hasChanged;
-}
-
 TrainControlState SimpleTrainController::mapPositionToControl(RotarySwitchPosition position) {
     // マッピングテーブルから対応する制御パラメータを検索
     for (int i = 0; i < _mappingCount; i++) {

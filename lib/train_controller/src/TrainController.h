@@ -21,8 +21,6 @@ public:
     
     virtual void begin() = 0;
     virtual void update() = 0;
-    virtual TrainControlState getCurrentState() = 0;
-    virtual bool hasStateChanged() = 0;
 
 protected:
     MotorController* _motorController;

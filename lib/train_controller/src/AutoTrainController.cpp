@@ -32,11 +32,3 @@ void AutoTrainController::update() {
     _display->setLines(line1, "Reverse");
     delay(2000);
 }
-
-TrainControlState AutoTrainController::getCurrentState() {
-    return _currentState;
-}
-
-bool AutoTrainController::hasStateChanged() {
-    return _currentState.hasChanged;
-}

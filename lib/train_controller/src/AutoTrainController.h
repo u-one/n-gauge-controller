@@ -9,8 +9,6 @@ public:
     
     void begin() override;
     void update() override;
-    TrainControlState getCurrentState() override;
-    bool hasStateChanged() override;
 };
 
 #endif

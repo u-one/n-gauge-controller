@@ -62,13 +62,3 @@ void DemoTrainController::update() {
     _display->setLines("VVVF Complete", "");
     delay(1000);
 }
-
-TrainControlState DemoTrainController::getCurrentState()
-{
-    return _currentState;
-}
-
-bool DemoTrainController::hasStateChanged()
-{
-    return _currentState.hasChanged;
-}
