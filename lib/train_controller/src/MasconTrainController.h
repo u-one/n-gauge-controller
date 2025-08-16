@@ -37,6 +37,7 @@ private:
     static const int _mappingCount;
     
     void updateSpeedControl();
+    void updateDisplay();
     int getTargetSpeedForPosition(RotarySwitchPosition position);
     String getPositionName(RotarySwitchPosition position);
     bool isBrakingPosition(RotarySwitchPosition position);

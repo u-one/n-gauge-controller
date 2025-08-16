@@ -75,21 +75,6 @@ void MasconTrainController::update() {
     // モーター制御の適用
     applyMotorControl();
     
-    // 表示の更新（位置が変わった場合、または速度が変化中）
-    if (positionChanged) {
-        String line1 = control.displayName;
-        _display->setLine1(line1);
-    }
-
-    if (_isAccelerating || _isDecelerating) {
-        String line2 = "Speed: " + String(_currentSpeed) + "%";
-        if (_isAccelerating) {
-            line2 += " ACC";
-        } else if (_isDecelerating) {
-            line2 += " BRK";
-        }
-        _display->setLine2(line2);
-    }
     
     // 状態更新
     _currentState.speed = _currentSpeed;
@@ -99,7 +84,27 @@ void MasconTrainController::update() {
     _currentState.hasChanged = positionChanged;
     
     _lastUpdateTime = currentTime;
+
+    updateDisplay();
     delay(20);
+}
+
+void MasconTrainController::updateDisplay() {
+    // 表示の更新（位置が変わった場合、または速度が変化中）
+    if (_currentState.hasChanged) {
+        String line1 = _currentState.displayName;
+        _display->setLine1(line1);
+    }
+
+    if (_isAccelerating || _isDecelerating) {
+        String line2 = "Speed: " + String(_currentSpeed / 10) + "." + String(_currentSpeed % 10) + "%";
+        if (_isAccelerating) {
+            line2 += " ACC";
+        } else if (_isDecelerating) {
+            line2 += " BRK";
+        }
+        _display->setLine2(line2);
+    }
 }
 
 void MasconTrainController::updateSpeedControl() {
