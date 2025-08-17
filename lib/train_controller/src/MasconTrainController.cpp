@@ -6,7 +6,7 @@ const MasconTrainController::MasconMapping MasconTrainController::_mappings[] = 
     {RotarySwitchPosition::State3,  4,   "P3", true},         // 力行3
     {RotarySwitchPosition::State4,  2,   "P2", true},         // 力行2
     {RotarySwitchPosition::State5,  1,   "P1", true},         // 力行1
-    {RotarySwitchPosition::State6,  0,   "N", false},         // 中立
+    {RotarySwitchPosition::State6,  0,   "N ", false},        // 中立
     {RotarySwitchPosition::State7,  -1,  "B1", false},        // ブレーキ1
     {RotarySwitchPosition::State8,  -2,  "B2", false},        // ブレーキ2
     {RotarySwitchPosition::State9,  -4,  "B3", false},        // ブレーキ3
@@ -18,11 +18,16 @@ const MasconTrainController::MasconMapping MasconTrainController::_mappings[] = 
 
 const int MasconTrainController::_mappingCount = sizeof(_mappings) / sizeof(MasconMapping);
 
-MasconTrainController::MasconTrainController(MotorController* motorController, RotarySwitch* rotarySwitch, TwoLinesCharacterDisplay* display)
+MasconTrainController::MasconTrainController(
+    MotorController* motorController, 
+    TwoLinesCharacterDisplay* display, 
+    RotarySwitch* rotarySwitch,
+    ToggleSwitch* directionSwitch
+)
     : TrainController(motorController, display),
       _rotarySwitch(rotarySwitch),
+      _directionSwitch(directionSwitch),
       _lastUpdateTime(0),
-      _currentSpeed(0),
       _acceleratonRate(0),
       _isAccelerating(false),
       _isDecelerating(false) {
@@ -34,15 +39,14 @@ void MasconTrainController::begin() {
     // 初期状態を読み取り
     RotarySwitchPosition position = _rotarySwitch->getCurrentPosition();
     MasconMapping control = mapPositionToControl(position);
+    bool isFwd = _directionSwitch->read();
     
     _currentState.speed = 0;
-    _currentState.isForward = true;
+    _currentState.isForward = isFwd;
     _currentState.displayName = control.displayName;
     _currentState.switchPosition = position;
-    _currentState.hasChanged = true;
     
     _acceleratonRate = control.acceleratonRate;
-    _currentSpeed = 0;
     
     _display->setLines("Mascon Mode", "Ready");
     delay(1000);
@@ -58,46 +62,40 @@ void MasconTrainController::update() {
     
     // ロータリースイッチの状態を読み取り
     RotarySwitchPosition newPosition = _rotarySwitch->read();
-    
-    // 前回の状態を保存
-    _lastState = _currentState;
+    bool isFwd = _directionSwitch->read();
     
     // 新しいマスコン制御状態にマッピング
     MasconMapping control = mapPositionToControl(newPosition);
     _acceleratonRate = control.acceleratonRate;
     
-    // 変更があったかチェック
-    bool positionChanged = _rotarySwitch->hasChanged();
-    
     // 速度制御の更新（マスコン風の滑らかな制御）
     updateSpeedControl();
     
-    // モーター制御の適用
-    applyMotorControl();
-    
-    
     // 状態更新
-    _currentState.speed = _currentSpeed;
-    _currentState.isForward = true; // 一方向制御
+    _currentState.isForward = isFwd;
     _currentState.displayName = control.displayName;
     _currentState.switchPosition = newPosition;
-    _currentState.hasChanged = positionChanged;
     
     _lastUpdateTime = currentTime;
 
+    applyMotorControl();
+
     updateDisplay();
+    _lastState = _currentState;
     delay(20);
 }
 
 void MasconTrainController::updateDisplay() {
     // 表示の更新（位置が変わった場合、または速度が変化中）
-    if (_currentState.hasChanged) {
+    if (_lastState.switchPosition != _currentState.switchPosition ||
+        _lastState.isForward != _currentState.isForward) {
         String line1 = _currentState.displayName;
+        line1 += " " + String(_currentState.isForward ? "FWD" : "REV");
         _display->setLine1(line1);
     }
 
     if (_isAccelerating || _isDecelerating) {
-        String line2 = "Speed: " + String(_currentSpeed / 10) + "." + String(_currentSpeed % 10) + "%";
+        String line2 = "Speed: " + String(_currentState.speed / 10) + "." + String(_currentState.speed % 10) + "%";
         if (_isAccelerating) {
             line2 += " ACC";
         } else if (_isDecelerating) {
@@ -108,15 +106,16 @@ void MasconTrainController::updateDisplay() {
 }
 
 void MasconTrainController::updateSpeedControl() {
+    int currentSpeed = _currentState.speed;
     // 現在速度を目標速度に向けて調整（マスコン風の滑らかな制御）
     if (_acceleratonRate > 0) {
         // 加速
-        _currentSpeed += _acceleratonRate;
+        currentSpeed += _acceleratonRate;
         _isAccelerating = true;
         _isDecelerating = false;
     } else if (_acceleratonRate < 0) {
         // 減速・ブレーキ
-        _currentSpeed += _acceleratonRate;
+        currentSpeed += _acceleratonRate;
         _isAccelerating = false;
         _isDecelerating = true;
     } else {
@@ -126,25 +125,30 @@ void MasconTrainController::updateSpeedControl() {
     }
     
     // 速度範囲の制限
-    if (_currentSpeed < MIN_SPEED) _currentSpeed = MIN_SPEED;
-    if (_currentSpeed > MAX_SPEED) _currentSpeed = MAX_SPEED;
+    if (currentSpeed < MIN_SPEED) currentSpeed = MIN_SPEED;
+    if (currentSpeed > MAX_SPEED) currentSpeed = MAX_SPEED;
+
+    _currentState.speed = currentSpeed;
 }
 
 void MasconTrainController::applyMotorControl() {
-    if (_currentSpeed == 0) {
+    if (_currentState.speed == 0) {
         _motorController->stop();
         return;
     }
     
-    // 方向設定（一方向制御）
-    _motorController->forward();
+    if (_currentState.isForward) {
+        _motorController->forward();
+    } else {
+        _motorController->reverse();
+    }
     
     // 周波数制御
     //int frequency = map(_currentSpeed, 0, MAX_SPEED, 120, 1800);
     int frequency = 180; // EF66, ブロアー音
     //int frequency = 330; // 千代田6000系チョッパ
     //int frequency = 10000; // 無音
-    float duty = map(_currentSpeed, 0, MAX_SPEED, 0, 1000);
+    float duty = map(_currentState.speed, 0, MAX_SPEED, 0, 1000);
     
     _motorController->setPwmSettings(frequency, duty);
 }

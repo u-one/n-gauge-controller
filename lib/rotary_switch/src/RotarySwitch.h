@@ -25,14 +25,12 @@ public:
     void setup();
     RotarySwitchPosition read();
     RotarySwitchPosition getCurrentPosition();
-    bool hasChanged();
     int getRawValue();
 
 private:
     int _analogPin;
     int _tolerance;
     RotarySwitchPosition _currentPosition;
-    RotarySwitchPosition _lastPosition;
     int _lastRawValue;
     
     struct Threshold {

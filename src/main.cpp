@@ -7,6 +7,8 @@
 #include "DemoTrainController.h"
 #include "AutoTrainController.h"
 #include "MasconTrainController.h"
+#include <ToggleSwitch.h>
+#include <DeviceTestController.h>
 
 const int IN1 = 8;
 const int IN2 = 9;
@@ -20,14 +22,18 @@ TwoLinesCharacterDisplay display(&lcd);
 
 // ロータリースイッチとトレインコントローラー
 RotarySwitch rotarySwitch(A0);
+const int DIR_SW = A1; // トグルスイッチのピン番号
+ToggleSwitch toggleSwitch(DIR_SW); 
 //SimpleTrainController trainController(&motorController, &rotarySwitch, &display);
 //AutoTrainController trainController(&motorController, &display);
-MasconTrainController trainController(&motorController, &rotarySwitch, &display);
+MasconTrainController trainController(&motorController, &display, &rotarySwitch, &toggleSwitch);
+//DeviceTestController trainController(&motorController, &display, &rotarySwitch, &toggleSwitch);
 
 void setup() {
   display.setup();
   motorController.setup();
   rotarySwitch.setup();
+  toggleSwitch.setup();
   trainController.begin();
 }
 

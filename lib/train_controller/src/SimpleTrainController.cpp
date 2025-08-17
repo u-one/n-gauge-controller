@@ -38,14 +38,13 @@ void SimpleTrainController::update() {
     // ロータリースイッチの状態を読み取り
     RotarySwitchPosition newPosition = _rotarySwitch->read();
     
-    // 前回の状態を保存
-    _lastState = _currentState;
     
     // 新しい制御状態にマッピング
     _currentState = mapPositionToControl(newPosition);
     
     // 変更があったかチェック
-    _currentState.hasChanged = _rotarySwitch->hasChanged();
+    _currentState.hasChanged = (_lastState.switchPosition != _currentState.switchPosition ||
+                                _lastState.isForward != _currentState.isForward);
     
     // 状態が変更された場合、モーターを制御
     if (_currentState.hasChanged) {
@@ -73,6 +72,7 @@ void SimpleTrainController::update() {
 
         _display->setLines(line1, line2);
     }
+    _lastState = _currentState;
     delay(500);
 }
 

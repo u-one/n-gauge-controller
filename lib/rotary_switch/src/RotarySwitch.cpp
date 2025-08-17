@@ -20,7 +20,6 @@ const int RotarySwitch::_thresholdCount = sizeof(_thresholds) / sizeof(Threshold
 RotarySwitch::RotarySwitch(int analogPin, int tolerance) 
     : _analogPin(analogPin), _tolerance(tolerance), 
       _currentPosition(RotarySwitchPosition::Unknown), 
-      _lastPosition(RotarySwitchPosition::Unknown),
       _lastRawValue(-1) {
 }
 
@@ -29,14 +28,12 @@ void RotarySwitch::setup() {
     // 初期値読み取り
     _lastRawValue = analogRead(_analogPin);
     _currentPosition = valueToPosition(_lastRawValue);
-    _lastPosition = _currentPosition;
 }
 
 RotarySwitchPosition RotarySwitch::read() {
     int rawValue = analogRead(_analogPin);
     _lastRawValue = rawValue;
     
-    _lastPosition = _currentPosition;
     _currentPosition = valueToPosition(rawValue);
     
     return _currentPosition;
@@ -44,10 +41,6 @@ RotarySwitchPosition RotarySwitch::read() {
 
 RotarySwitchPosition RotarySwitch::getCurrentPosition() {
     return _currentPosition;
-}
-
-bool RotarySwitch::hasChanged() {
-    return _currentPosition != _lastPosition;
 }
 
 int RotarySwitch::getRawValue() {
