@@ -2,17 +2,17 @@
 
 const RotarySwitch::Threshold RotarySwitch::_thresholds[] = {
     {5, RotarySwitchPosition::State1},      // 0〜10
-    {91, RotarySwitchPosition::State2},     // 86〜96
-    {185, RotarySwitchPosition::State3},    // 180〜190
-    {278, RotarySwitchPosition::State4},    // 273〜283
-    {372, RotarySwitchPosition::State5},    // 367〜377
-    {465, RotarySwitchPosition::State6},    // 460〜470
-    {558, RotarySwitchPosition::State7},    // 553〜563
-    {651, RotarySwitchPosition::State8},    // 646〜656
-    {743, RotarySwitchPosition::State9},    // 738〜748
-    {837, RotarySwitchPosition::State10},   // 832〜842
-    {931, RotarySwitchPosition::State11},   // 926〜936
-    {1023, RotarySwitchPosition::State12}   // 1018〜1023
+    {84, RotarySwitchPosition::State2},     // 79〜89
+    {167, RotarySwitchPosition::State3},    // 162〜172
+    {253, RotarySwitchPosition::State4},    // 248〜258
+    {338, RotarySwitchPosition::State5},    // 333〜343
+    {425, RotarySwitchPosition::State6},    // 420〜430
+    {510, RotarySwitchPosition::State7},    // 505〜515
+    {595, RotarySwitchPosition::State8},    // 590〜600
+    {680, RotarySwitchPosition::State9},    // 675〜685
+    {766, RotarySwitchPosition::State10},   // 761〜771
+    {852, RotarySwitchPosition::State11},   // 847〜857
+    {938, RotarySwitchPosition::State12}    // 933〜943
 };
 
 const int RotarySwitch::_thresholdCount = sizeof(_thresholds) / sizeof(Threshold);
