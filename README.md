@@ -1,8 +1,24 @@
 # n-gauge-controller
 
 Arduino UNO + L298N を用いて、Nゲージ（鉄道模型）の走行を制御するプロジェクトです。  
-PWMによる速度制御と、正転・反転の切り替えを実現しており、  
-クリーンアーキテクチャの設計思想を取り入れた構成を採用しています。
+PWMによる速度制御と、正転・反転の切り替えを実現。
+
+---
+
+## 🚆 機能概要
+
+### 基本機能
+- PWM による速度制御
+- 正転 / 反転 の切り替え
+- 常点灯
+- 2行LCDによる状態表示
+
+### 制御モード
+- **MasconTrainController**: マスコン風制御（ロータリースイッチ + 方向切替）
+- **DeviceTestController**: デバイステスト用（スイッチ状態表示）
+- **SimpleTrainController**: シンプル制御
+- **AutoTrainController**: 自動制御
+- **DemoTrainController**: デモンストレーション用
 
 ---
 
@@ -10,8 +26,14 @@ PWMによる速度制御と、正転・反転の切り替えを実現してお�
 
 - Arduino UNO
 - L298N モータードライバモジュール
-- DC モーター（Nゲージ車両）
+- LCDキャラクタディスプレイ
+  - みんラボ LCD3WIRE board
+- ロータリースイッチ（車両制御用）
+  - 1回路12接点
+- トグルスイッチ（電源用）
+- トグルスイッチ（方向切替用）
 - 電源（例：12V 2A）
+- DC モーター（Nゲージ車両）
 - その他：レール、ジャンパワイヤ等
 
 ---
@@ -38,47 +60,62 @@ PWMによる速度制御と、正転・反転の切り替えを実現してお�
 
 ---
 
-## 🧱 ディレクトリ構成（クリーンアーキテクチャ）
+## 🧱 ディレクトリ構成
 
 ```
+lib/
+├── motor_controller/        # モーター制御インターフェース
+│   └── src/
+│       ├── MotorController.h
+│       └── MotorController.cpp
+├── rotary_switch/          # ロータリースイッチ制御
+│   └── src/
+│       ├── RotarySwitch.h
+│       └── RotarySwitch.cpp
+├── toggle_switch/          # トグルスイッチ制御
+│   └── src/
+│       ├── ToggleSwitch.h
+│       └── ToggleSwitch.cpp
+├── two_lines_display/      # 2行LCDディスプレイ制御
+│   └── src/
+│       ├── TwoLinesCharacterDisplay.h
+│       └── TwoLinesCharacterDisplay.cpp
+├── train_controller/       # 列車制御ロジック
+│   └── src/
+│       ├── TrainController.h          # 基底クラス
+│       ├── TrainController.cpp
+│       ├── MasconTrainController.h    # マスコン制御
+│       ├── MasconTrainController.cpp
+│       ├── DeviceTestController.h     # デバイステスト
+│       ├── DeviceTestController.cpp
+│       ├── SimpleTrainController.h    # シンプル制御
+│       ├── SimpleTrainController.cpp
+│       ├── AutoTrainController.h      # 自動制御
+│       ├── AutoTrainController.cpp
+│       ├── DemoTrainController.h      # デモ制御
+│       └── DemoTrainController.cpp
+└── LiquidCrystal3/         # LCD制御ライブラリ
+    ├── LiquidCrystal3.h
+    ├── LiquidCrystal3.cpp
+    └── examples/
+
 src/
-├── domain/
-│ └── MotorController.h // インターフェース
-├── usecase/
-│ └── TrainControlUseCase.h // ビジネスロジック
-├── infrastructure/
-│ └── L298NMotorDriver.h // L298N具体実装
-├── main.ino // setup/loop + DI
+└── main.cpp                # メインエントリーポイント
 ```
 
----
-
-## 🚆 機能概要
-
-- PWM による速度制御（0〜255）
-- 正転 / 反転 の切り替え
-- 停止処理
-- テストコードで動作確認可能
+## ソフトウェア改善TODO
+- 抽象レイヤ導入によるテスト容易性の向上
+- シリアル出力によるデバッグ機能
 
 ---
 
-## 🧪 テストシーケンス（例）
 
-```cpp
-motor->forward(100);   // 正転（速度100）
-delay(2000);
-motor->stop();
-delay(1000);
-motor->reverse(150);   // 反転（速度150）
-delay(2000);
-motor->stop();
-
----
-
-## 将来的な拡張計画
-- ロータリーエンコーダーによるノッチ操作（段階的な加速・減速）
-- ディスプレイ接続による動作状況のリアルタイム表示
-- 正転・反転の手動切替（エンコーダ・スイッチ等による）
+## 🚀 将来的な拡張計画
+- ✅ ロータリースイッチによるマスコン操作（実装済み）
+- ✅ 2行LCDディスプレイによる状態表示（実装済み）
+- ✅ 方向切替スイッチ（実装済み）
+- 常点灯調整機能
+- 制御モード切り替え機能
 - VVVF音の擬似生成によるリアルな走行サウンドの演出
-- BluetoothやWIFIによる外部操作
+- BluetoothやWiFiによる外部操作
 - より高機能なGUIとの連携
