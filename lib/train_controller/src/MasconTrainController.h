@@ -22,6 +22,7 @@ private:
     // マスコン制御パラメータ
     static const int ACCELERATION_RATE = 1;    // 加速度 (speed/100ms)
     static const int DECELERATION_RATE = 2;    // 減速度 (speed/100ms)
+    static const int MIN_SPEED = 100;
     static const int MAX_SPEED = 1000;
     static const int BRAKE_RATE = 3;           // ブレーキ減速度 (speed/100ms)
     static const int UPDATE_INTERVAL = 100;    // 更新間隔(ms)

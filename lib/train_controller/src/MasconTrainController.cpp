@@ -126,7 +126,7 @@ void MasconTrainController::updateSpeedControl() {
     }
     
     // 速度範囲の制限
-    if (_currentSpeed < 0) _currentSpeed = 0;
+    if (_currentSpeed < MIN_SPEED) _currentSpeed = MIN_SPEED;
     if (_currentSpeed > MAX_SPEED) _currentSpeed = MAX_SPEED;
 }
 
