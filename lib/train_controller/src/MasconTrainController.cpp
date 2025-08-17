@@ -12,7 +12,7 @@ const MasconTrainController::MasconMapping MasconTrainController::_mappings[] = 
     {RotarySwitchPosition::State9,  -4,  "B3", false},        // ブレーキ3
     {RotarySwitchPosition::State10, -8,  "B4", false},        // ブレーキ4
     {RotarySwitchPosition::State11, -16, "B5", false},        // ブレーキ5
-    {RotarySwitchPosition::State12, -100, "Emergency", true}, // 非常ブレーキ
+    {RotarySwitchPosition::State12, -100, "EB", true}, // 非常ブレーキ
     {RotarySwitchPosition::Unknown, 0,   "Unknown", true}     // 不明
 };
 
