@@ -12,7 +12,7 @@ const MasconTrainController::MasconMapping MasconTrainController::_mappings[] = 
     {RotarySwitchPosition::State9,  -4,  "B3", false},        // ブレーキ3
     {RotarySwitchPosition::State10, -8,  "B4", false},        // ブレーキ4
     {RotarySwitchPosition::State11, -16, "B5", false},        // ブレーキ5
-    {RotarySwitchPosition::State12, -100, "EB", true}, // 非常ブレーキ
+    {RotarySwitchPosition::State12, -1000, "EB", true}, // 非常ブレーキ
     {RotarySwitchPosition::Unknown, 0,   "Unknown", true}     // 不明
 };
 
@@ -76,13 +76,13 @@ void MasconTrainController::update() {
     _currentState.displayName = control.displayName;
     _currentState.switchPosition = newPosition;
     
-    _lastUpdateTime = currentTime;
 
     applyMotorControl();
 
     updateDisplay();
     _lastState = _currentState;
-    delay(20);
+    _lastUpdateTime = currentTime;
+    //delay(20);
 }
 
 void MasconTrainController::updateDisplay() {
@@ -95,7 +95,7 @@ void MasconTrainController::updateDisplay() {
     }
 
     if (_isAccelerating || _isDecelerating) {
-        String line2 = "Speed: " + String(_currentState.speed / 10) + "." + String(_currentState.speed % 10) + "%";
+        String line2 = "SPD: " + String(_currentState.speed / 100) + "." + String(_currentState.speed % 100) + "%";
         if (_isAccelerating) {
             line2 += " ACC";
         } else if (_isDecelerating) {
@@ -148,9 +148,14 @@ void MasconTrainController::applyMotorControl() {
     int frequency = 180; // EF66, ブロアー音
     //int frequency = 330; // 千代田6000系チョッパ
     //int frequency = 10000; // 無音
-    float duty = map(_currentState.speed, 0, MAX_SPEED, 0, 1000);
+    float duty = map(_currentState.speed, 0, MAX_SPEED, 0, 10000);
     
     _motorController->setPwmSettings(frequency, duty);
+}
+
+int map(int x) {
+    int y = -((x-2000)^2)/4000+1000;
+    return y;
 }
 
 int MasconTrainController::getTargetSpeedForPosition(RotarySwitchPosition position) {

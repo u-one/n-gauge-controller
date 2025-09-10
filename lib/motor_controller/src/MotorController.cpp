@@ -123,12 +123,12 @@ void MotorController::_updateTimer2Settings(int frequency) {
 
 // duty比を設定（0.0-100.0%）
 void MotorController::setDutyCycle(float dutyCycle) {
-    _currentDutyCycle = constrain(dutyCycle, 0.0, 1000.0);
+    _currentDutyCycle = constrain(dutyCycle, 0.0, 10000.0);
     
     if (_pwmPin == 9 || _pwmPin == 10) {
         // Timer1のPhase-Correct PWMの場合、OCRレジスタで直接制御
         // ICR1（TOP値）に対して、duty比の割合だけONになるようOCRレジスタ値を計算
-        uint16_t ocrValue = (uint32_t)ICR1 * _currentDutyCycle / 1000.0;
+        uint16_t ocrValue = (uint32_t)ICR1 * _currentDutyCycle / 10000.0;
         
         if (_pwmPin == 10) {
             // OCR1B: Output Compare Register 1 B
@@ -139,7 +139,7 @@ void MotorController::setDutyCycle(float dutyCycle) {
         }
     } else {
         // 他のピンは従来通りanalogWrite使用
-        int pwmValue = map(_currentDutyCycle * 100, 0, 1000, 0, 255);
+        int pwmValue = map(_currentDutyCycle, 0, 10000, 0, 255);
         analogWrite(_pwmPin, pwmValue);
     }
 }
