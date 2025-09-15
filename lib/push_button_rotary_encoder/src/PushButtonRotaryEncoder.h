@@ -15,9 +15,11 @@ class PushButtonRotaryEncoder {
 public:
     PushButtonRotaryEncoder(int pinCLK, int pinDT, int pinSW);
     void setup();
-    void setupInterrupt();
+    void setupInterrupt(void (*interuptHandler)());
     
     // イベントハンドラー登録
+    void handleRotation();
+
     void onRotary(RotaryEventHandler handler);
     void onButton(ButtonEventHandler handler);
     
@@ -35,12 +37,10 @@ private:
     int _pinSW;
     
     bool _lastButtonState;
+    unsigned long _lastUpdateTime;
     RotaryEventHandler _rotaryHandler;
     ButtonEventHandler _buttonHandler;
-    
-    static PushButtonRotaryEncoder* _instance;
-    static void interruptHandler();
-    void handleRotation();
+
 };
 
 #endif

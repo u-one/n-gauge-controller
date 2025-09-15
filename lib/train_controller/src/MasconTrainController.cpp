@@ -22,15 +22,18 @@ MasconTrainController::MasconTrainController(
     MotorController* motorController, 
     TwoLinesCharacterDisplay* display, 
     RotarySwitch* rotarySwitch,
-    ToggleSwitch* directionSwitch
+    ToggleSwitch* directionSwitch,
+    PushButtonRotaryEncoder* rotaryEncoder
 )
     : TrainController(motorController, display),
       _rotarySwitch(rotarySwitch),
       _directionSwitch(directionSwitch),
+      _rotaryEncoder(rotaryEncoder),
       _lastUpdateTime(0),
       _acceleratonRate(0),
       _isAccelerating(false),
-      _isDecelerating(false) {
+      _isDecelerating(false),
+      _minSpeed(1000) {
 }
 
 void MasconTrainController::begin() {
@@ -58,6 +61,11 @@ void MasconTrainController::update() {
     // 更新間隔チェック
     if (currentTime - _lastUpdateTime < UPDATE_INTERVAL) {
         return;
+    }
+    
+    // スピードエンコーダーのボタン状態チェック
+    if (_rotaryEncoder) {
+        _rotaryEncoder->isButtonPressed();
     }
     
     // ロータリースイッチの状態を読み取り
@@ -125,7 +133,7 @@ void MasconTrainController::updateSpeedControl() {
     }
     
     // 速度範囲の制限
-    if (currentSpeed < MIN_SPEED) currentSpeed = MIN_SPEED;
+    if (currentSpeed < _minSpeed) currentSpeed = _minSpeed;
     if (currentSpeed > MAX_SPEED) currentSpeed = MAX_SPEED;
 
     _currentState.speed = currentSpeed;
@@ -183,4 +191,14 @@ MasconTrainController::MasconMapping MasconTrainController::mapPositionToControl
     
     // 見つからない場合は安全のため緊急停止
     return {RotarySwitchPosition::Unknown, 0, "Emergency", true};
+}
+
+void MasconTrainController::onRotaryEncoderEvent(RotaryDirection dir) {
+    if (dir == RotaryDirection::Clockwise) {
+        _minSpeed += MIN_SPEED_STEP;
+    } else {
+        _minSpeed -= MIN_SPEED_STEP;
+    }
+    if (_minSpeed < 0) _minSpeed = 0;
+    if (_minSpeed > MAX_SPEED / 2) _minSpeed = MAX_SPEED / 2;
 }
