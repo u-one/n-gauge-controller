@@ -1,17 +1,17 @@
 #include "MasconTrainController.h"
 
 const MasconTrainController::MasconMapping MasconTrainController::_mappings[] = {
-    {RotarySwitchPosition::State1,  16,  "P5", true},         // 力行5
-    {RotarySwitchPosition::State2,  8,   "P4", true},         // 力行4
-    {RotarySwitchPosition::State3,  4,   "P3", true},         // 力行3
-    {RotarySwitchPosition::State4,  2,   "P2", true},         // 力行2
-    {RotarySwitchPosition::State5,  1,   "P1", true},         // 力行1
+    {RotarySwitchPosition::State1,  160,  "P5", true},         // 力行5
+    {RotarySwitchPosition::State2,  80,   "P4", true},         // 力行4
+    {RotarySwitchPosition::State3,  40,   "P3", true},         // 力行3
+    {RotarySwitchPosition::State4,  20,   "P2", true},         // 力行2
+    {RotarySwitchPosition::State5,  10,   "P1", true},         // 力行1
     {RotarySwitchPosition::State6,  0,   "N ", false},        // 中立
-    {RotarySwitchPosition::State7,  -1,  "B1", false},        // ブレーキ1
-    {RotarySwitchPosition::State8,  -2,  "B2", false},        // ブレーキ2
-    {RotarySwitchPosition::State9,  -4,  "B3", false},        // ブレーキ3
-    {RotarySwitchPosition::State10, -8,  "B4", false},        // ブレーキ4
-    {RotarySwitchPosition::State11, -16, "B5", false},        // ブレーキ5
+    {RotarySwitchPosition::State7,  -10,  "B1", false},        // ブレーキ1
+    {RotarySwitchPosition::State8,  -20,  "B2", false},        // ブレーキ2
+    {RotarySwitchPosition::State9,  -40,  "B3", false},        // ブレーキ3
+    {RotarySwitchPosition::State10, -80,  "B4", false},        // ブレーキ4
+    {RotarySwitchPosition::State11, -160, "B5", false},        // ブレーキ5
     {RotarySwitchPosition::State12, -1000, "EB", true}, // 非常ブレーキ
     {RotarySwitchPosition::Unknown, 0,   "Unknown", true}     // 不明
 };

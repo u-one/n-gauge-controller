@@ -67,3 +67,4 @@ src/
 ## Communication Guidelines
 
 - 基本的に日本語で受け答えしてください
+- Arduinoの開発環境でC++11
